@@ -1,4 +1,4 @@
-mcp[cli]
-httpx
-python-dotenv
+fastapi
+uvicorn
 streamlit
+requests
