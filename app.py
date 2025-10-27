@@ -3,6 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 import requests
 
+from cortex_agents import run_cortex_agents
+import asyncio
+
+
 app = FastAPI()
 
 # Allow Streamlit frontend to call API
@@ -28,31 +32,15 @@ def list_agents():
     ]
 
 # Chat endpoint with Mistral integration
+from cortex_agents import run_cortex_agents
+import asyncio
+
 @app.post("/chat")
-def chat(agent: str, message: str):
-    mistral_api_url = "https://api.mistral.ai/v1/chat/completions"
-    mistral_api_key = os.getenv("MISTRAL_API_KEY")
-
-    if not mistral_api_key:
-        return {"error": "MISTRAL_API_KEY not set in environment variables"}
-
-    headers = {
-        "Authorization": f"Bearer {mistral_api_key}",
-        "Content-Type": "application/json"
-    }
-
-    payload = {
-        "model": "mistral-medium",  # You can change to mistral-large or mistral-small
-        "messages": [
-            {"role": "system", "content": f"You are {agent}, an MCP agent."},
-            {"role": "user", "content": message}
-        ]
-    }
-
+async def chat(agent: str, message: str):
     try:
-        response = requests.post(mistral_api_url, json=payload, headers=headers)
-        response.raise_for_status()
-        data = response.json()
-        return {"response": data["choices"][0]["message"]["content"]}
+        # Call the Cortex agent async function
+        result = await run_cortex_agents(message)
+        # Return the main text response (you can add more fields if you want)
+        return {"response": result.get("text", "No response from Cortex agent")}
     except Exception as e:
         return {"error": str(e)}
