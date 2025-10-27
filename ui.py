@@ -11,4 +11,13 @@ agent = st.selectbox("Choose an agent:", ["snowflake_agent", "analytics_agent"])
 
 if st.button("Send"):
     response = requests.post(f"{API_BASE}/chat", params={"agent": agent, "message": user_input})
-    st.write("Response:", response.json().get("response"))  
+
+ try:
+        data = response.json()
+        if "response" in data:
+            st.write("Response:", data["response"])
+        else:
+            st.error(f"Error: {data.get('error', 'Unknown error')}")
+    except ValueError:
+        st.error("Invalid response from server.")
+
