@@ -2,7 +2,7 @@
 import streamlit as st
 import requests
 
-API_BASE = "https://sfguide-mcp-cortex-agents.onrender.com"  # Replace with your Render URL
+API_BASE = "https://mcp-fastapi-backend.onrender.com"  # Replace with your Render URL
 
 st.title("Snowflake MCP Agent Chatbot")
 st.write("Ask a question:")
